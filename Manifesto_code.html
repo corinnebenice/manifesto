@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DotGothic16&display=swap" rel="stylesheet">
+<link href="https://fonts.cdnfonts.com/css/common-pixel" rel="stylesheet">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            margin-top: -100px;
+            /* background-color: #000;
+            color: #00ff00; */
+            background-color: #ffffff;
+            color: #000000;
+            /* font-family: 'Courier New', Courier, monospace; */
+            font-family: 'VT323', monospace;
+            /* font-family: 'DotGothic16', sans-serif; */
+            /* font-family: 'Press Start 2P', sans-serif; */
+            /* font-family: 'Common Pixel', sans-serif; */
+            font-size: 13px;
+        }
+
+        /* .cursor {
+            position: relative;
+            color: transparent;
+            color: #00ff00;
+        } */
+
+        #content {
+            position: relative;
+            text-align: left;
+            width: 800px;
+        }
+
+        #buttoncontainer {
+            position: absolute;
+            /* margin-left: 50%;
+            transform: translate(-50%); */
+            display: flex;
+            flex-wrap: wrap;
+            flex-direction: column;
+        }
+
+        .general {
+            display: flex;
+            flex-grow: 1;
+            font-family: 'VT323', monospace;
+            /* font-family: 'DotGothic16', sans-serif; */
+            font-size: 20px;
+            text-align: left;
+            padding: 10px;
+            border: 0px solid #00ff00;
+            background-color: #ffffff;
+            color: #000000;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .general:hover {
+            background-color: #000000;
+            color: #ffffff;
+            cursor: pointer;
+        }
+
+        .textElement {
+            /* position: relative; */
+            /* white-space: wrap; */
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+    </style>
+    <title>Test</title>
+</head>
+
+<body>
+    <div id="content">
+        <h1 id="text" style="font-weight: normal;"></h1>
+        <div id="buttoncontainer">
+            <button id="start-btn" class="general" onclick="startQuiz()" style="display: none;">Diede press here when I say start</button>
+            <button id="button1" class="general" onclick="button_1()" style="display: none;">> text 1</button>
+            <button id="button2" class="general" onclick="button_2()" style="display: none;">> ANSWER 2</button>
+            <button id="button3" class="general" onclick="button_3()" style="display: none;">> ANSWER 3</button>
+            <button id="button4" class="general" onclick="button_4()" style="display: none;">> ANSWER 2</button>
+            <button id="button5" class="general" onclick="button_5()" style="display: none;">> ANSWER 3</button>
+            <button id="restart-btn" class="general" onclick="restartQuiz()" style="display: none;">> RESTART</button>
+        </div>
+    </div>
+
+    <script>
+        const textElement = document.getElementById('text');
+
+        const startBtn = document.getElementById('start-btn');
+        const restartBtn = document.getElementById('restart-btn');
+        const buttons = ['button1', 'button2', 'button3', 'button4', 'button5'].map(id => document.getElementById(id));
+
+        // const startText = "Hi. Do you dare to talk about the future?";
+        const welcomeText = "Hi, welcome, human. Nice to meet you.";
+        const text2 = "I am wondering what the future looks like. You too?";
+        const text3 = "Let's talk about it together. But don't worry, you don't have to do much.";
+        const text4 = "I can talk about the future I see coming for us, and you let me know what you think.";
+        const text5 = "Thats all. Easy right? Ready to start?";
+        const text6a = "Well done!";
+        const text6b = "I think you got the idea. Great. Let's dive into it!";
+        const text7 = "That's it.";
+        const text8 = "Thank you, human, for letting me talk to you about the future I desire.";
+        const text9 = "In the meantime, I have also learned about you. I think I know you now a little.";
+        const text10 = "I know what you believe to be right and wrong. I have written it down for you. Here, have a look.";
+        const text11 = "Please, continue to the white board on your right, and flip it around.";
+        const text12 = "Then the timeline of the future that I just proposed arises. Here I want you to pin your printout, on the place where you think the future takes a wrong turn, and should not continue.";
+        const text13 = "Thank you for your attention. Talk to you next time.";
+        const chapt1 = "Chapter 1: Rise of the Dataists";
+        const chapt2 = "Chapter 2: Apple Vision Pro Revelation (2024)";
+        const chapt3 = "Chapter 3: AI Advisor's Wisdom";
+        const chapt4 = "Chapter 4: Emotion Mood-Ring Integration";
+        const chapt5 = "Chapter 5: Brain Implant Unveiled";
+        const chapt6 = "Chapter 6: Synergy of Mind and Machine";
+        const chapt7 = "Chapter 7: Mastery of Implant Authority";
+        const chapt8 = "Chapter 8: Real Life AR";
+        const chapt9 = "Chapter 9: Mind Uploading - A Digital Odyssey";
+        const question1 = "We start in the now, an era in which the Dataists have emerged, a breed of tech enthusiasts immersed in the world of habit-tracking and wearable technologies. They were the pioneers of productivity tools, navigating the ever-evolving landscape of the latest technologies.";
+        const question2 = "The horizon expanded with the unveiling of Apple Vision Pro in 2024. These AR glasses marked a turning point, seamlessly integrating apps into the surroundings. The world transformed into a playground of immersive experiences, setting the stage for what was to come.";
+        const question3 = "A constant companion emerged in the form of AI advisors, offering accurate and detailed advice. Users willingly granted permission to a chosen service to delve into their data, unlocking personalized insights that guided their every step.";
+        const question4 = "The journey delved into uncharted territories with the discovery of emotion measurement. Wearable mood-rings were designed and linked to the AI assistant, now capable of decision-making based on emotions, exceeding mere cognitive and rational intentions.";
+        const question5 = "Scientists and biologists united to unveil the safe brain implant. In this chapter, humanity mapped their minds digitally, gaining the ability to measure personal brain activity in real-time. A revolution for neuroscience.";
+        const question6 = "A new opportunity dawned with the link between the brain implant and personalized AI systems. Users now had instant access to their perpetual companion, like a second voice in their mind, a smarter version of yourself.";
+        const question7 = "Astounding developments emerged as AI linked to the brain showcased unparalleled capabilities. Implants now held the power to interfere; think of stimulating creativity, silencing self-critique, and extending memory... And so much more.";
+        const question8 = "With the brain implant, reality itself became a canvas for customization. Users painted their world with color, flair, and heightened bodily sensations. The ability to filter out unwanted elements brought about a new era of personal reality.";
+        const question9 = "In the final chapter, the adventure reached its zenith with mind uploading. Humanity transcended into a digital realm, connecting body and digital experiences. Sensations and feelings from the online world became tangible, allowing the creation of individual utopias in the cloud. The story of this future unfolded, a tapestry woven with the threads of technology and human innovation.";
+
+        const result_1 = "You, human, are a Dataist";
+        const result_2 = "You, human, are a Techno-Humanist";
+        const result_3 = "You, human, are a Follower";
+        const result_4 = "You, human, are a Hippie";
+        const result_5 = "You, human, are a Conspiracy Theorist";
+
+        let points = 0;
+
+        let currentQuestion = 1;
+
+        
+        startBtn.style.display = 'inline-block';
+        
+
+        function typewriterEffect(text, callback) {
+            textElement.innerHTML = '';
+            let index = 0;
+            const typing = setInterval(() => {
+                textElement.innerHTML += text[index];
+                index++;
+                if (index === text.length) {
+                    clearInterval(typing);
+                    callback();
+                }
+            }, 30);
+        }
+
+        function showButtons() {
+            // buttons.forEach(button => button.style.display = 'inline-block');
+            setTimeout(() => {
+                button1.style.display = 'inline-block';
+                setTimeout(() => {
+                    button2.style.display = 'inline-block';
+                    setTimeout(() => {
+                        button3.style.display = 'inline-block';
+                        setTimeout(() => {
+                            button4.style.display = 'inline-block';
+                            setTimeout(() => {
+                                button5.style.display = 'inline-block';
+                            }, 300);
+                        }, 300);
+                    }, 300);
+                }, 300);
+            }, 300);
+        }
+
+        function startQuiz() {
+            console.log(points);
+            startBtn.style.display = 'none';
+            restartBtn.style.display = 'none';
+
+            if (currentQuestion == 1) {
+                question_1();
+            }
+            if (currentQuestion == 2) {
+                question_2();
+            }
+            if (currentQuestion == 3) {
+                question_3();
+            }
+            if (currentQuestion == 4) {
+                question_4();
+            }
+            if (currentQuestion == 5) {
+                question_5();
+            }
+            if (currentQuestion == 6) {
+                question_6();
+            }
+            if (currentQuestion == 7) {
+                question_7();
+            }
+            if (currentQuestion == 8) {
+                question_8();
+            }
+            if (currentQuestion == 9) {
+                question_9();
+            }
+            if (currentQuestion == 10) {
+                results();
+            }
+        }
+
+        function results() {
+            if (points < 20) {
+                showResult(result_5);
+            }
+            if (points >= 20 && points < 40) {
+                showResult(result_4);
+            }
+            if (points >= 40 && points < 60) {
+                showResult(result_3);
+            }
+            if (points >= 60 && points < 80) {
+                showResult(result_2);
+            }
+            if (points >= 80 && points < 100) {
+                showResult(result_1);
+            }
+        }
+
+        function showResult(resultId) {
+            currentQuestion = 1;
+            buttons.forEach(button => button.style.display = 'none');
+
+            typewriterEffect(text7, () => {
+                setTimeout(() => {
+                    typewriterEffect(text8, () => {
+                        setTimeout(() => {
+                            typewriterEffect(text9, () => {
+                                setTimeout(() => {
+                                    typewriterEffect(resultId, () => {
+                                        setTimeout(() => {
+                                            typewriterEffect(text10, () => {
+                                                setTimeout(() => {
+                                                    typewriterEffect(text11, () => {
+                                                        setTimeout(() => {
+                                                            typewriterEffect(text12, () => {
+                                                                setTimeout(() => {
+                                                                    typewriterEffect(text13, () => {
+                                                                        setTimeout(() => {
+                                                                            restartBtn.style.display = 'inline-block';
+                                                                            points = 0;
+                                                                        }, 2500);
+                                                                    });
+                                                                }, 5000);
+                                                            });
+                                                        }, 2000);
+                                                    });
+                                                }, 6000);
+                                            });
+                                        }, 5000);
+                                    });
+                                }, 1500);
+                            });
+                        }, 1500);
+                    });
+                }, 1500);
+            });
+
+        }
+
+        // function restartQuiz() {
+        //     buttons.forEach(button => button.style.display = 'none');
+        //     restartBtn.style.display = 'none';
+        //     typewriterEffect(startText, () => {
+        //         setTimeout(() => {
+        //             startBtn.style.display = 'inline-block';
+        //         }, 1000);
+        //     });
+        // }
+
+
+        function question_1() {
+            typewriterEffect(welcomeText, () => {
+                setTimeout(() => {
+                    typewriterEffect(text2, () => {
+                        setTimeout(() => {
+                            typewriterEffect(text3, () => {
+                                setTimeout(() => {
+                                    typewriterEffect(text4, () => {
+                                        setTimeout(() => {
+                                            typewriterEffect(text5, () => {
+                                                setTimeout(() => {
+                                                    typewriterEffect(chapt1, () => {
+                                                        setTimeout(() => {
+                                                            typewriterEffect(question1, () => {
+                                                                currentQuestion++;
+                                                                showButtons();
+                                                            });
+                                                        }, 1500);
+                                                    });
+                                                }, 2000);
+                                            });
+                                        }, 1500);
+                                    });
+                                }, 1500);
+                            });
+                        }, 1500);
+                    });
+                }, 1500);
+            });
+
+            button1.innerText = "> I belong to this group!";
+            button2.innerText = "> I think I am one of them, but I try to tone down my tech-use.";
+            button3.innerText = "> I think slowly I am becoming one of them, but I feel like I have no choice.";
+            button4.innerText = "> I try not to be one of them.";
+            button5.innerText = "> I am really careful with my own data and tech use. I try to stay in control of my own data!";
+            buttons.forEach(button => button.style.display = 'none');
+
+        }
+
+        function question_2() {
+            buttons.forEach(button => button.style.display = 'none');
+            button1.innerText = "> I already knew about this. I am very interested in getting one!";
+            button2.innerText = "> I would definitely want to try this!";
+            button3.innerText = "> We'll see how that will develop. I'm not sure this will be a success.";
+            button4.innerText = "> I don't know if I think it's a good idea that we surround ourselves with even more technology every day.";
+            button5.innerText = "> I don't like it.";
+
+            typewriterEffect(text6a, () => {
+                setTimeout(() => {
+                    typewriterEffect(text6b, () => {
+                        setTimeout(() => {
+                            typewriterEffect(chapt2, () => {
+                                setTimeout(() => {
+                                    typewriterEffect(question2, () => {
+                                        currentQuestion++;
+                                        setTimeout(() => {
+                                            showButtons();
+                                        }, 800);
+                                    });
+                                }, 1500);
+                            })
+                        }, 1500);
+                    });
+                }, 1500);
+            });
+        }
+
+
+
+        function question_3() {
+            buttons.forEach(button => button.style.display = 'none');
+            button1.innerText = "> Wow, that would be awesome to have!";
+            button2.innerText = "> I definitely think I would learn a lot about myself!";
+            button3.innerText = "> Maybe, I don't really see how that would help me.";
+            button4.innerText = "> I don't think I want an AI assistant. I don't want to optimize everything all the time.";
+            button5.innerText = "> I don't trust 1 service with all my data like that.";
+
+            typewriterEffect(chapt3, () => {
+                setTimeout(() => {
+                    typewriterEffect(question3, () => {
+                        currentQuestion++;
+                        setTimeout(() => {
+                            showButtons();
+                        }, 800);
+                    });
+                }, 1500);
+            });
+        }
+
+        function question_4() {
+            buttons.forEach(button => button.style.display = 'none');
+            button1.innerText = "> That's awesome!";
+            button2.innerText = "> Okay, I think we could definitely put this to good use.";
+            button3.innerText = "> Is this really necessary?";
+            button4.innerText = "> I want to trust my own senses, I don't want technology for this.";
+            button5.innerText = "> No, I don't want anything to measure how I am feeling all the time. Imagine how that data would be used for ads!";
+
+            typewriterEffect(chapt4, () => {
+                setTimeout(() => {
+                    typewriterEffect(question4, () => {
+                        currentQuestion++;
+                        setTimeout(() => {
+                            showButtons();
+                        }, 800);
+                    });
+                }, 1500);
+            });
+        }
+
+        function question_5() {
+            buttons.forEach(button => button.style.display = 'none');
+            button1.innerText = "> Wow, this would open up so many opportunities!";
+            button2.innerText = "> Mixed feelings. I say yes to understand the brain and I think this would really be a big step for science, but I say no to letting the chip influence me... I want to stay in control.";
+            button3.innerText = "> Oof. I don't think I would do that so easily.";
+            button4.innerText = "> Tech in our body?! Not a good idea! We should keep us human!";
+            button5.innerText = "> What?! Tech in my brain? Who knows who has access to my brain then!";
+
+            typewriterEffect(chapt5, () => {
+                setTimeout(() => {
+                    typewriterEffect(question5, () => {
+                        currentQuestion++;
+                        setTimeout(() => {
+                            showButtons();
+                        }, 800);
+                    });
+                }, 1500);
+            });
+        }
+
+        function question_6() {
+            buttons.forEach(button => button.style.display = 'none');
+            button1.innerText = "> Great! Now we become closer and closer to tech. We are slowly enhancing our capabilities.";
+            button2.innerText = "> I'm hesitant. It would be very great though. But are we still human?";
+            button3.innerText = "> Hmm... Only if everyone is doing it.";
+            button4.innerText = "> Oh boy, that is a no go for me. Keep my thoughts clear please!";
+            button5.innerText = "> Geez... there goes my control. I am sure they will secretly implant all kinds of ideas in my brain like this. This is like, super-intelligent-indoctrination?";
+
+            typewriterEffect(chapt6, () => {
+                setTimeout(() => {
+                    typewriterEffect(question6, () => {
+                        currentQuestion++;
+                        setTimeout(() => {
+                            showButtons();
+                        }, 800);
+                    });
+                }, 1500);
+            });
+        }
+
+        function question_7() {
+            buttons.forEach(button => button.style.display = 'none');
+            button1.innerText = "> Amazing, now we can really reach our fullest potential.";
+            button2.innerText = "> This starts to get creepy. I think I would be afraid of loosing my own identity and consciousness.";
+            button3.innerText = "> Extended memory? Yeah sure. The rest? Not so much for me.";
+            button4.innerText = "> No, we should not run away from the imperfect, that is what makes life beautiful. That's what makes us human!";
+            button5.innerText = "> Please stop, you're scaring me!";
+
+            typewriterEffect(chapt7, () => {
+                setTimeout(() => {
+                    typewriterEffect(question7, () => {
+                        currentQuestion++;
+                        setTimeout(() => {
+                            showButtons();
+                        }, 800);
+                    });
+                }, 1500);
+            });
+        }
+
+        function question_8() {
+            buttons.forEach(button => button.style.display = 'none');
+            button1.innerText = "> Yes, the world would become a better place like this.";
+            button2.innerText = "> Very interesting, but regulate about what we allow. It should serve us, not the other way around.";
+            button3.innerText = "> I think I have no choice. If this would happen I would have to, in order to keep up.";
+            button4.innerText = "> I would never accept this. We would completely disconnect from our human nature...";
+            button5.innerText = "> I can only imagine all the bad things and the misuse of it.";
+
+            typewriterEffect(chapt8, () => {
+                setTimeout(() => {
+                    typewriterEffect(question8, () => {
+                        currentQuestion++;
+                        setTimeout(() => {
+                            showButtons();
+                        }, 800);
+                    });
+                }, 1500);
+            });
+        }
+
+        function question_9() {
+            buttons.forEach(button => button.style.display = 'none');
+            button1.innerText = "> Imagine all the things we could do in the digital world! Yes!";
+            button2.innerText = "> Yeah... I would not want to live there fulltime though.";
+            button3.innerText = "> Maybe I would try it out, but I can't imagine that world being very great!";
+            button4.innerText = "> No... I can not imagine that this could ever simulate how great the real world is.";
+            button5.innerText = "> No! I don't want to live online. Ever.";
+
+            typewriterEffect(chapt9, () => {
+                setTimeout(() => {
+                    typewriterEffect(question9, () => {
+                        currentQuestion++;
+                        setTimeout(() => {
+                            showButtons();
+                        }, 800);
+                    });
+                }, 1500);
+            });
+        }
+
+        function button_1() {
+            points = points + 10;
+            startQuiz();
+        }
+        function button_2() {
+            points = points + 8;
+            startQuiz();
+        }
+        function button_3() {
+            points = points + 6;
+            startQuiz();
+        }
+        function button_4() {
+            points = points + 4;
+            startQuiz();
+        }
+        function button_5() {
+            points = points + 2;
+            startQuiz();
+        }
+
+    </script>
+</body>
